@@ -1,12 +1,60 @@
 <html> 
 <body>
-  <style type="text/css">
-    /* Customize the chat button appearance */
-    .embeddedServiceHelpButton .helpButton .uiButton {
-      background-color: #00adef! important;  /* Change this to your desired button color */
-    }
-    
-  </style>
+  <style type='text/css'>
+
+              .embeddedServiceHelpButton .helpButton .uiButton {
+
+                background-color: ⌗FFA400;
+
+                border-radius: 50%;
+
+                min-width: 5em;
+
+               margin: 0 15px 15px 0;
+
+            }
+
+              .embeddedServiceHelpButton .helpButton .uiButton:focus {
+
+                outline: 1px solid ⌗FFA400;
+
+                border-radius: 50%;
+
+                min-width: 5em;
+
+            }
+
+              .embeddedServiceHelpButton .helpButton {
+
+                margin: 0 15px 25px 0;
+
+            }
+
+              .embeddedServiceHelpButton .helpButton .uiButton .embeddedServiceIcon {
+
+                margin: auto;
+
+            }
+
+              .embeddedServiceHelpButton .embeddedServiceIcon::before {
+
+               font-size: 2.5em;
+
+            }
+
+              .embeddedServiceHelpButton .helpButton .uiButton .helpButtonLabel {
+
+                display: none;
+
+            }
+
+             .embeddedServiceLiveAgentStateChatAvatar.isLightningOutContext .agentIconColor0 {
+
+                background-color: ⌗84bd00;
+
+            }
+
+</style>
 
 
 <script type='text/javascript'>
