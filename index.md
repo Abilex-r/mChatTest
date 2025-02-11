@@ -4,7 +4,7 @@
 
               .embeddedServiceHelpButton .helpButton .uiButton {
 
-                background-color: ⌗FFA400;
+                background-color: #00adef;
 
                 border-radius: 50%;
 
@@ -16,7 +16,7 @@
 
               .embeddedServiceHelpButton .helpButton .uiButton:focus {
 
-                outline: 1px solid ⌗FFA400;
+                outline: 1px solid #00adef;
 
                 border-radius: 50%;
 
@@ -50,7 +50,7 @@
 
              .embeddedServiceLiveAgentStateChatAvatar.isLightningOutContext .agentIconColor0 {
 
-                background-color: ⌗84bd00;
+                background-color: #84bd00;
 
             }
 
