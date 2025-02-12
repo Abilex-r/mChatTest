@@ -1,45 +1,48 @@
 <html>
   <head>
     <style type="text/css">
-      /* Custom button styling */
+      /* Custom chat button styling */
       .customChatButton {
-        background-color: #00adef;
+        background-color: rgb(0, 173, 239); /* Use Case 1: Required Bubble Color */
         border-radius: 50%;
-        width: 56px;
-        height: 56px;
+        width: 70px;
+        height: 70px;
         border: none;
         cursor: pointer;
         position: fixed;
-        bottom: 10px;
-        right: 10px;
+        bottom: 20px; /* Adjusted for better placement */
+        right: 20px;
+        z-index: 2147483647; /* Use Case 2: Ensures it's always on top */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        white-space: nowrap; /* Prevents text breaking */
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       }
       .customChatButton:hover {
-        background-color: #0098ce;
-      }
-      /* Optional CSS override to help keep the default button hidden */
-      .embeddedServiceHelpButton {
-        display: none !important;
+        background-color: rgb(0, 150, 210); /* Slightly darker on hover */
       }
     </style>
   </head>
   <body>
-    <!-- Your custom chat button -->
-    <button class="customChatButton" onclick="launchCustomChat()">Chat with our Agents!</button>
+    <!-- Custom Chat Button -->
+    <button class="customChatButton" onclick="launchCustomChat()">Chat with us</button>
 
     <script type="text/javascript">
       function initEmbeddedMessaging() {
         try {
-          // Set language and hide the default chat button BEFORE initialization.
           embeddedservice_bootstrap.settings.language = 'de';
           embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
           
           window.addEventListener("onEmbeddedMessagingReady", function() {
             console.log("Embedded Messaging is ready");
-            // Optionally, force hide the chat button immediately on ready:
             embeddedservice_bootstrap.utilAPI.hideChatButton();
           });
-          
-          // Initialize the embedded messaging service.
+
           embeddedservice_bootstrap.init(
             '00D5t000000Eo5k',
             'DSAMessaging',
@@ -56,7 +59,6 @@
         embeddedservice_bootstrap.utilAPI.launchChat()
           .then(() => {
             console.log('Chat launched successfully');
-            // Immediately hide the default button (if it appears after launch)
             embeddedservice_bootstrap.utilAPI.hideChatButton();
           })
           .catch(() => {
@@ -68,7 +70,6 @@
       }
     </script>
 
-    <!-- Load the Salesforce Messaging bootstrap script -->
     <script type="text/javascript"
             src="https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js"
             onload="initEmbeddedMessaging()">
