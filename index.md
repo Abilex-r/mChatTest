@@ -1,10 +1,6 @@
 <html>
   <head>
     <style type="text/css">
-      /* Force-hide the default Salesforce chat button */
-      .embeddedServiceHelpButton {
-        display: none !important;
-      }
       /* Custom button styling */
       .customChatButton {
         background-color: #00adef;
@@ -20,6 +16,10 @@
       .customChatButton:hover {
         background-color: #0098ce;
       }
+      /* Force-hide default chat button */
+      .embeddedServiceHelpButton {
+        display: none !important;
+      }
     </style>
   </head>
   <body>
@@ -29,11 +29,12 @@
     <script type="text/javascript">
       function initEmbeddedMessaging() {
           try {
-              // Set language or any other settings
+              // Set language or any other settings as needed
               embeddedservice_bootstrap.settings.language = 'de';
-
-              // Hide the default chat button on load (if supported)
-              embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
+              // Disable the default chat button
+              embeddedservice_bootstrap.settings.displayHelpButton = false;
+              // Optionally, try hideChatButtonOnLoad if available:
+              // embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
               
               window.addEventListener("onEmbeddedMessagingReady", function() {
                   console.log("Embedded Messaging is ready");
@@ -52,20 +53,26 @@
           }
       }
 
-      // Workaround: simulate a click on the default (hidden) button
       function launchCustomChat() {
-          // Try to find the default button element in the DOM
-          var defaultButton = document.querySelector('.embeddedServiceHelpButton');
-          if (defaultButton) {
-              // Even if hidden, a click event may trigger the chat window to open
-              defaultButton.click();
-          } else {
-              console.error("Default chat button not found");
-          }
+          // Use the API method from InfallibleTechie’s reference article
+          embeddedservice_bootstrap.utilAPI.launchChat()
+            .then(() => {
+              console.log('Inside Launch Chat');
+              // Immediately hide the default chat button in case it reappears
+              var defaultButton = document.querySelector('.embeddedServiceHelpButton');
+              if (defaultButton) {
+                defaultButton.style.display = 'none';
+              }
+            })
+            .catch(() => {
+              console.log('Inside Launch Chat catch Block');
+            })
+            .finally(() => {
+              console.log('Inside Launch Chat finally Block');
+            });
       }
     </script>
 
-    <!-- Load the Salesforce Messaging bootstrap script -->
     <script type="text/javascript" src="https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script>
   </body>
 </html>
