@@ -10,17 +10,19 @@
         border: none;
         cursor: pointer;
         position: fixed;
-        bottom: 20px; /* Adjusted for better placement */
+        bottom: 20px;
         right: 20px;
         z-index: 2147483647; /* Use Case 2: Ensures it's always on top */
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 14px;
-        font-weight: bold;
         text-align: center;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
         white-space: nowrap; /* Prevents text breaking */
+        padding: 5px;
+        max-width: 80%;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       }
       .customChatButton:hover {
@@ -70,6 +72,7 @@
       }
     </script>
 
+    <!-- Load the Salesforce Messaging bootstrap script -->
     <script type="text/javascript"
             src="https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js"
             onload="initEmbeddedMessaging()">
