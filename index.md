@@ -3,26 +3,27 @@
     <style type="text/css">
       /* Custom chat button styling */
       .customChatButton {
-        background-color: rgb(0, 173, 239); /* Use Case 1: Required Bubble Color */
+        background-color: rgb(0, 173, 239); /* Required Bubble Color */
         border-radius: 50%;
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
         border: none;
         cursor: pointer;
         position: fixed;
         bottom: 20px;
         right: 20px;
-        z-index: 2147483647; /* Use Case 2: Ensures it's always on top */
+        z-index: 2147483647; /* Ensure it's always on top */
         display: flex;
+        flex-direction: column; /* Aligns text properly */
         align-items: center;
         justify-content: center;
         text-align: center;
         color: white;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: bold;
         white-space: nowrap; /* Prevents text breaking */
-        padding: 5px;
-        max-width: 80%;
+        padding: 8px;
+        line-height: 1.2;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       }
       .customChatButton:hover {
