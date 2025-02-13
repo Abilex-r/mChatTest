@@ -59,6 +59,10 @@
 
       function launchCustomChat() {
         console.log('Launching chat...');
+        
+        // Hide the custom chat button when chat opens
+        document.querySelector('.customChatButton').style.display = 'none';
+
         embeddedservice_bootstrap.utilAPI.launchChat()
           .then(() => {
             console.log('Chat launched successfully');
@@ -71,6 +75,13 @@
             console.log('Launch chat complete');
           });
       }
+
+      // Event Listener: Show the button again when chat closes
+      window.addEventListener("onEmbeddedMessagingSessionEnded", function() {
+        console.log("Chat session ended, showing button again.");
+        document.querySelector('.customChatButton').style.display = 'flex';
+      });
+
     </script>
 
     <!-- Load the Salesforce Messaging bootstrap script -->
