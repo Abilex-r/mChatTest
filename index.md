@@ -29,6 +29,11 @@
       .customChatButton:hover {
         background-color: rgb(0, 150, 210); /* Slightly darker on hover */
       }
+
+      /* Hide the standard Salesforce chat button */
+      .embeddedServiceHelpButton {
+        display: none !important;
+      }
     </style>
   </head>
   <body>
@@ -76,10 +81,21 @@
           });
       }
 
-      // Event Listener: Show the button again when chat closes
+      // Event Listener: Show the button again when chat closes & re-hide default button
       window.addEventListener("onEmbeddedMessagingSessionEnded", function() {
-        console.log("Chat session ended, showing button again.");
+        console.log("Chat session ended, showing custom button again.");
+
+        // Show the custom chat button again
         document.querySelector('.customChatButton').style.display = 'flex';
+
+        // Force-hide the default Salesforce button (in case it reappears)
+        setTimeout(() => {
+          embeddedservice_bootstrap.utilAPI.hideChatButton();
+          let defaultButton = document.querySelector('.embeddedServiceHelpButton');
+          if (defaultButton) {
+            defaultButton.style.display = 'none';
+          }
+        }, 100);
       });
 
     </script>
