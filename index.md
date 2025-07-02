@@ -32,8 +32,6 @@
     </style>
   </head>
   <body>
-    <!-- Custom Chat Button -->
-    <button class="customChatButton" onclick="launchCustomChat()">Chat with us</button>
 
     <script type="text/javascript">
      function initEmbeddedMessaging() {
