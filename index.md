@@ -1,8 +1,7 @@
-Add commentMore actions 
-
-<html>
+<html> Add commentMore actions
 <body>
-<script type='text/javascript'>
+  <script type='text/javascript'>
+
       function initEmbeddedMessaging() {
 
             try {
@@ -11,7 +10,7 @@ Add commentMore actions
 
                   
 
-                  window.addEventListener("onEmbeddedMessagingReady", () => {
+                  window.addEventListener("onEmbeddedMessagingReady", () => {            
 
                         console.log( "Inside Prechat API!!" );
 
@@ -45,7 +44,10 @@ Add commentMore actions
 
       };
 
-</script> <script type='text/javascript' src='https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+</script>
+
+<script type='text/javascript' src='https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
 </body>
+
 </html>
