@@ -1,4 +1,7 @@
-Add commentMore actions <script type='text/javascript'>
+Add commentMore actions 
+
+<html>
+<script type='text/javascript'>
       function initEmbeddedMessaging() {
 
             try {
@@ -42,3 +45,6 @@ Add commentMore actions <script type='text/javascript'>
       };
 
 </script> <script type='text/javascript' src='https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+
+</html>
