@@ -1,6 +1,7 @@
 Add commentMore actions 
 
 <html>
+<body>
 <script type='text/javascript'>
       function initEmbeddedMessaging() {
 
@@ -46,5 +47,5 @@ Add commentMore actions
 
 </script> <script type='text/javascript' src='https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
-
+</body>
 </html>
