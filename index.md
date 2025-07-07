@@ -47,6 +47,10 @@
           embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
           
           window.addEventListener("onEmbeddedMessagingReady", function() {
+            embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields(
+                              { "p_number" : "0453762192" } ); // here we would need the p-Ident Number from the user context, the placeholder is used for testing purposes
+
+                              });
             console.log("Embedded Messaging is ready");
             embeddedservice_bootstrap.utilAPI.hideChatButton();
           });
