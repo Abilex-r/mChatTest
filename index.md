@@ -10,7 +10,7 @@
 
       embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
 
-      embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields( { "p_number" : "0991000231" } );
+      embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({ "p_number" : "0991000231" });
 
       window.addEventListener("onEmbeddedMessagingReady", function() {
 
