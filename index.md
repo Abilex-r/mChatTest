@@ -10,11 +10,13 @@
 
       embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
 
-      embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({ "p_number" : "0991000231" });
+      
 
       window.addEventListener("onEmbeddedMessagingReady", function() {
 
         console.log("Embedded Messaging is ready");
+
+        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({ "p_number" : "0991000231" });
 
         embeddedservice_bootstrap.utilAPI.hideChatButton();
 
