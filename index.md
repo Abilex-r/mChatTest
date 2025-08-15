@@ -30,58 +30,70 @@
   let uiEventsBound = false;
   let chatOpen = false;
 
-  function getCustomBtn() {
-    return document.getElementById('customChatButton') || document.querySelector('.customChatButton');
-  }
+  const getBtn = () => document.getElementById('customChatButton');
 
   function showCustomBubble() {
-    if (chatOpen) return; // nie zeigen, wenn Chat offen
-    const btn = getCustomBtn();
-    if (btn) {
-      btn.style.setProperty('display', 'flex', 'important');
-      btn.disabled = false;
-    }
+    if (chatOpen) return; // nie zeigen, wenn Chat offen markiert
+    const btn = getBtn();
+    if (btn) { btn.style.setProperty('display','flex','important'); btn.disabled = false; }
+  }
+  function hideCustomBubble() {
+    const btn = getBtn();
+    if (btn) btn.style.setProperty('display','none','important');
   }
 
-  function hideCustomBubble() {
-    const btn = getCustomBtn();
-    if (btn) btn.style.setProperty('display', 'none', 'important');
+  // Sichtbarkeit des iFrames robust prüfen (für Fallback)
+  function isChatIframeVisible() {
+    const iframe =
+      document.querySelector('iframe.embeddedMessagingFrame') ||
+      document.querySelector('iframe[src*="embeddedservice"]') ||
+      document.querySelector('iframe[src*="embedded-messaging"]');
+    if (!iframe) return false;
+    const cs = getComputedStyle(iframe);
+    const rect = iframe.getBoundingClientRect();
+    return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0'
+           && rect.width > 0 && rect.height > 0;
   }
 
   function bindMessagingUiEventsOnce() {
     if (uiEventsBound) return;
     uiEventsBound = true;
 
-    // Chat aufgeklappt → Bubble aus
+    // ⇢ Chat sichtbar (expandiert)
     window.addEventListener('onEmbeddedMessagingWindowExpanded', () => {
-      chatOpen = true;
+      chatOpen = true;  // Chat offen
       hideCustomBubble();
     });
 
-    // Chat minimiert/Session Ende → Bubble an
+    // ⇢ Chat minimiert
     window.addEventListener('onEmbeddedMessagingWindowMinimized', () => {
+      chatOpen = false; // Chat nicht offen
+      showCustomBubble();
+    });
+
+    // ⇢ Chatfenster geschlossen (x)
+    window.addEventListener('onEmbeddedMessagingWindowClosed', () => {
       chatOpen = false;
       showCustomBubble();
     });
+
+    // ⇢ Chatfenster „versteckt“ (manche Deployments nutzen das)
+    window.addEventListener('onEmbeddedMessagingWindowHidden', () => {
+      chatOpen = false;
+      showCustomBubble();
+    });
+
+    // ⇢ Session wirklich beendet (Agent/Timeout)
     window.addEventListener('onEmbeddedMessagingSessionEnded', () => {
       chatOpen = false;
       showCustomBubble();
     });
 
-    // Fallback: nur wenn keine Events feuern
+    // Fallback: wenn Events nicht feuern → DOM beobachten
     const obs = new MutationObserver(() => {
-      if (chatOpen) return; // Events haben Vorrang
-      const iframe =
-        document.querySelector('iframe.embeddedMessagingFrame') ||
-        document.querySelector('iframe[src*="embeddedservice"]') ||
-        document.querySelector('iframe[src*="embedded-messaging"]');
-
-      if (!iframe) { showCustomBubble(); return; }
-      const cs = getComputedStyle(iframe);
-      const visible = cs.display !== 'none' && cs.visibility !== 'hidden' &&
-                      iframe.offsetWidth > 0 && iframe.offsetHeight > 0;
+      const visible = isChatIframeVisible();
       if (visible) { chatOpen = true; hideCustomBubble(); }
-      else { chatOpen = false; showCustomBubble(); }
+      else         { chatOpen = false; showCustomBubble(); }
     });
     obs.observe(document.body, { childList: true, subtree: true, attributes: true });
   }
@@ -99,8 +111,8 @@
       window.addEventListener('onEmbeddedMessagingButtonCreated', () => {
         buttonReady = true;
         console.log('[M4W] Button created');
-        embeddedservice_bootstrap.utilAPI.hideChatButton(); // Standardbubble aus
-        const btn = getCustomBtn(); if (btn) btn.disabled = false;
+        embeddedservice_bootstrap.utilAPI.hideChatButton(); // Standard-Bubble sauber ausblenden
+        const btn = getBtn(); if (btn) btn.disabled = false;
         bindMessagingUiEventsOnce();
       });
 
@@ -110,7 +122,9 @@
         'https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894',
         { scrt2URL: 'https://dsa--uat.sandbox.my.salesforce-scrt.com' }
       );
-    } catch (e) { console.error('Error loading Embedded Messaging:', e); }
+    } catch (e) {
+      console.error('Error loading Embedded Messaging:', e);
+    }
   }
 
   async function launchCustomChat() {
@@ -119,13 +133,13 @@
       console.warn('Messaging nicht bereit (apiReady:', apiReady, ', buttonReady:', buttonReady, ')');
       return;
     }
-    chatOpen = true;           // ab jetzt als offen behandeln
-    hideCustomBubble();        // hart verstecken
+    chatOpen = true;      // ab jetzt als „offen“ tracken
+    hideCustomBubble();   // eigene Bubble sofort weg
 
     try {
       await embeddedservice_bootstrap.utilAPI.launchChat();
       console.log('Chat launched successfully');
-      embeddedservice_bootstrap.utilAPI.hideChatButton();
+      embeddedservice_bootstrap.utilAPI.hideChatButton(); // sicherheitshalber
     } catch (err) {
       console.error('Error launching chat:', err);
       chatOpen = false;
@@ -136,7 +150,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const btn = getCustomBtn();
+    const btn = getBtn();
     if (btn) btn.addEventListener('click', launchCustomChat);
   });
 </script>
