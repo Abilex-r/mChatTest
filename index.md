@@ -42,51 +42,38 @@
 
     <script>
   let apiReady = false;
+  let buttonReady = false;
 
-  // Wartet, bis der interne Button im DOM ist UND tatsächlich im Dokument hängt
-  function waitForInternalButton(timeoutMs = 10000) {
-    const selector = '.embeddedServiceHelpButton';
-    return new Promise((resolve, reject) => {
-      const btn = document.querySelector(selector);
-      if (btn && document.body.contains(btn)) return resolve(btn);
-
-      const obs = new MutationObserver(() => {
-        const el = document.querySelector(selector);
-        if (el && document.body.contains(el)) {
-          obs.disconnect();
-          resolve(el);
-        }
-      });
-      obs.observe(document.documentElement || document.body, {
-        childList: true, subtree: true
-      });
-
-      setTimeout(() => {
-        obs.disconnect();
-        reject(new Error('Timeout: internal messaging button not found in DOM'));
-      }, timeoutMs);
-    });
-  }
+  // 2) Click-Listener erst NACH DOM-Load registrieren
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('customChatButton');
+    if (!btn) return; // Guard
+    btn.addEventListener('click', launchCustomChat);
+  });
 
   function initEmbeddedMessaging() {
     try {
-      // Sprache usw. vor init:
+      // Basiskonfig vor init
       window.embeddedservice_bootstrap.settings.language = 'de';
-      // WICHTIG: NICHT hideChatButtonOnLoad = true setzen,
-      // der Standard-Button muss im DOM erzeugt werden.
+      // WICHTIG: hier NICHT den Button per Setting verstecken.
+      // Wir verstecken ihn erst NACH der Erstellung (Event).
 
-      // API bereit:
+      // API bereit
       window.addEventListener('onEmbeddedMessagingReady', () => {
         apiReady = true;
-        // Hidden Prechat erst hier:
-        window.embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-          p_number: '0991000231'
-        });
+        // Hidden-Prechat ist jetzt sicher
+        window.embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({ p_number: '0991000231' });
+        console.log('[M4W] Ready');
+      });
 
-        // Sobald der interne Button existiert, Custom-Button aktivieren
-        waitForInternalButton()
-          .then(() => document.getElementById('customChatButton').disabled = false)
-          .catch(err => console.warn(err.message));
+      // Der interne (Standard-)Button wurde erstellt → jetzt ist Launch sicher
+      window.addEventListener('onEmbeddedMessagingButtonCreated', () => {
+        buttonReady = true;
+        console.log('[M4W] Button created');
+        // Jetzt ist es safe, den Standard-Button zu verstecken:
+        window.embeddedservice_bootstrap.utilAPI.hideChatButton();
+        const btn = document.getElementById('customChatButton');
+        if (btn) btn.disabled = false;
       });
 
       // Init starten
@@ -97,43 +84,34 @@
         { scrt2URL: 'https://dsa--uat.sandbox.my.salesforce-scrt.com' }
       );
     } catch (e) {
-      console.error('Error loading Embedded Messaging: ', e);
+      console.error('Error loading Embedded Messaging:', e);
     }
   }
 
   async function launchCustomChat() {
     console.log('Launching chat...');
+    const btn = document.getElementById('customChatButton');
+
+    if (!window.embeddedservice_bootstrap || !apiReady || !buttonReady) {
+      console.warn('Messaging nicht bereit (apiReady:', apiReady, ', buttonReady:', buttonReady, ')');
+      return;
+    }
+    if (btn) btn.style.display = 'none';
+
     try {
-      if (!window.embeddedservice_bootstrap || !apiReady) {
-        console.warn('API noch nicht bereit.');
-        return;
-      }
-
-      // Sicherstellen, dass der interne Button JETZT im DOM hängt
-      await waitForInternalButton();
-
-      // Erst jetzt launchen
-      document.getElementById('customChatButton').style.display = 'none';
       await window.embeddedservice_bootstrap.utilAPI.launchChat();
       console.log('Chat launched successfully');
-
+      window.embeddedservice_bootstrap.utilAPI.hideChatButton(); // doppelt hält besser
     } catch (err) {
       console.error('Error launching chat:', err);
-      document.getElementById('customChatButton').style.display = 'flex';
-
-      // Fallback: zur Not den Standard-Button direkt klicken (falls sichtbar gemacht)
-      // const nativeBtn = document.querySelector('.embeddedServiceHelpButton button');
-      // if (nativeBtn) nativeBtn.click();
-
+      if (btn) btn.style.display = 'inline-flex';
     } finally {
       console.log('Launch chat complete');
     }
   }
-
-  document.getElementById('customChatButton').addEventListener('click', launchCustomChat);
 </script>
 
-<!-- Bootstrap IM BODY laden, dann init auf onload -->
+<!-- 3) Bootstrap NACH dem Button laden, init per onload -->
 <script
   src="https://dsa--uat.sandbox.my.site.com/ESWDSAMessaging1721207835894/assets/js/bootstrap.min.js"
   onload="initEmbeddedMessaging()">
